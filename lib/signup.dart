@@ -17,10 +17,10 @@ class _signupState extends State<signup> {
   void validation(){
     final FormState? _form = _formKey.currentState;
     if(_form!.validate()){
-      print("Yes");
+      print("No");
     }
     else {
-      print("NO");
+      print("Yes");
     }
   }
   @override
@@ -132,7 +132,7 @@ class _signupState extends State<signup> {
                             if(value==""){
                               return "Please fill the Phone Number";
                             }
-                            else if (value!.length < 11){
+                            else if (value!.length < 10){
                               return "Phone Number must be 10 digit";
                             }
                             return "";
