@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:leazkart/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:leazkart/homescreen.dart';
 
 class login extends StatefulWidget {
+
+  static String id='Login';
 
   @override
   _loginState createState() => _loginState();
@@ -11,22 +15,27 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
 RegExp regExp = new RegExp(p);
-void validation(){
+bool validation(){
   final FormState? _form = _formKey.currentState;
   if(_form!.validate()){
-    print("Yes");
+    return false;
   }
   else {
-    print("No");
+    return true;
   }
 }
 bool obserText = true;
 
 class _loginState extends State<login> {
+
+  final _auth = FirebaseAuth.instance;
+  late String email;
+  late String password;
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 253, 222, 1),
+      backgroundColor: Colors.blue[100],
       body: Form(
         key: _formKey,
         child: Container(
@@ -57,6 +66,9 @@ class _loginState extends State<login> {
                         }
                         return "";
                       },
+                      onChanged: (value){
+                        email = value;
+                      },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Email",
@@ -75,6 +87,9 @@ class _loginState extends State<login> {
                           return "Password is too Short";
                         }
                         return "";
+                      },
+                      onChanged: (value){
+                        password = value;
                       },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -100,9 +115,20 @@ class _loginState extends State<login> {
                       height: 45,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: (){
-                            validation();
-                          },
+                        onPressed: () async {
+                          if(validation()== true){
+                            try {
+                              final newUser = await _auth.signInWithEmailAndPassword(
+                                  email: email,
+                                  password: password,
+                              );
+                              Navigator.pushNamed(context, home.id);
+                            }catch (e){
+                              print(e);
+                            }
+                          }
+
+                        },
                           style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)
                           ),
@@ -118,9 +144,8 @@ class _loginState extends State<login> {
                           ),
                           GestureDetector(
                             onTap: (){
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (ctx) => signup()),
-                              );
+                              Navigator.pushNamed(context, signup.id);
+
                             },
                             child: Text(
                               "Signup",

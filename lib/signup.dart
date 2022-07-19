@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:leazkart/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:leazkart/homescreen.dart';
 
 class signup extends StatefulWidget {
+
+  static String id = 'signup';
   @override
   _signupState createState() => _signupState();
 }
@@ -14,19 +17,26 @@ RegExp regExp = new RegExp(p);
 bool obserText = true;
 
 class _signupState extends State<signup> {
-  void validation(){
+
+  final _auth = FirebaseAuth.instance;
+   late String email;
+   late String userName;
+   late String password;
+
+
+  bool validation(){
     final FormState? _form = _formKey.currentState;
     if(_form!.validate()){
-      print("No");
+      return false;
     }
     else {
-      print("Yes");
+      return true;
     }
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 253, 222, 1),
+      backgroundColor: Colors.blue[100],
       resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Form(
@@ -73,6 +83,11 @@ class _signupState extends State<signup> {
                             }
                             return "";
                            },
+                          onChanged: (value){
+                            userName = value;
+                          },
+
+
                           decoration: InputDecoration(
                             hintText: "Username",
                             hintStyle: TextStyle(
@@ -90,6 +105,9 @@ class _signupState extends State<signup> {
                               return "Email is Invalid";
                             }
                             return "";
+                          },
+                          onChanged: (value){
+                            email = value;
                           },
                           decoration: InputDecoration(
                             hintText: "Email",
@@ -110,6 +128,9 @@ class _signupState extends State<signup> {
                             }
                             return "";
                           },
+                          onChanged: (value){
+                            password = value;
+                          },
                           decoration: InputDecoration(
                             hintText: "Password",
                             suffixIcon: GestureDetector(
@@ -127,30 +148,25 @@ class _signupState extends State<signup> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-                        TextFormField(
-                          validator: (value){
-                            if(value==""){
-                              return "Please fill the Phone Number";
-                            }
-                            else if (value!.length < 10){
-                              return "Phone Number must be 10 digit";
-                            }
-                            return "";
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Phone Number",
-                            hintStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+
                          Container(
                            height: 45,
                            width: double.infinity,
                            child: ElevatedButton(
-                           onPressed: (){
-                             validation();
+                           onPressed: () async {
+                             if(validation()== true){
+                               try {
+                                 final newUser = await _auth
+                                     .createUserWithEmailAndPassword(
+                                     email: email, password: password);
+                                 User? user = newUser.user;
+                                 user?.updateDisplayName(userName);
+                                 Navigator.pushNamed(context, home.id);
+                               }catch (e){
+                                 print(e);
+                               }
+                             }
+
                            },
                            child: Text("Register"),
                            style: ButtonStyle(
