@@ -36,7 +36,7 @@ class _signupState extends State<signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.blue[50],
       resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Form(

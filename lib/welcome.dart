@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leazkart/signup.dart';
 import 'package:leazkart/login.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class welcome extends StatefulWidget {
   static String id='Welcome';
@@ -20,14 +21,20 @@ class _welcomeState extends State<welcome> {
             Container(
               height: 300,
               child: Center(
-                child: Text(
-                  'leazkart',
+                child: DefaultTextStyle(
                   style: TextStyle(
                     color: Colors.lightBlue,
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
                   ),
+                  child: AnimatedTextKit(
+                    repeatForever: true,
+                    animatedTexts: [
+                      FlickerAnimatedText('leazkart'),]
+
                 ),
+                )
+
               ),
             ),
             Container(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leazkart/welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
 class home extends StatefulWidget {
 
   static String id = 'Home';
